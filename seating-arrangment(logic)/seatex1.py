@@ -3,12 +3,6 @@ from pprint import pprint as printf
 from os import system
 import numpy as np
 #shuffling correct
-#######################################################
-##          Name      : Pradeep Suthar               ##
-##          Reg. No.  : 11815262                     ##
-##          Roll. No. : B:47                         ##
-##          Section   : K18AP                        ##
-#######################################################
 
 number_of_row_in_room = int(input('Enter Number of Rows Room :'))
 number_of_col_in_room = int(input('Enter Number of Columns Room :'))
