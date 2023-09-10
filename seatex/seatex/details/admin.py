@@ -1,59 +1,12 @@
 from django.contrib import admin
-from django.http import HttpResponseRedirect,HttpResponse
+from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.urls import path
 from .models import Details,RoomDetails
 from .forms import CSVUploadForm
 import csv
 import io
-def generate_seating_arrangement(modeladmin, request, queryset):
-    # Create a dictionary to store room information
-    rooms = {}
-    for room_info in RoomDetails.objects.all():
-        rooms[room_info.roomno] = {
-            'rows': room_info.rows,
-            'columns': room_info.columns,
-            'benches': room_info.noofbenches,
-            'bench_strength': room_info.benchstrength,
-            'students': []
-        }
 
-    # Create a list of students
-    students = [student.RegNo for student in queryset]
-
-    # Calculate the total number of students to be assigned
-    total_students = len(students)
-
-    # Initialize variables to keep track of current student and room
-    current_student = 0
-
-    # Assign students to rooms sequentially
-    for room_number, room_info in rooms.items():
-        for i in range(room_info['rows']):
-            for j in range(room_info['columns']):
-                if current_student < total_students:
-                    room_info['students'].append(students[current_student])
-                    current_student += 1
-
-    # Create a CSV response for the seating arrangement
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="seating_arrangement.csv"'
-
-    csv_writer = csv.writer(response)
-    for room_number, room_info in rooms.items():
-        for i in range(room_info['rows']):
-            row_data = []
-            for j in range(room_info['columns']):
-                student_index = i * room_info['columns'] + j
-                if student_index < len(room_info['students']):
-                    row_data.append(room_info['students'][student_index])
-                else:
-                    row_data.append("Empty")
-            csv_writer.writerow(row_data)
-
-    return response
-
-generate_seating_arrangement.short_description = "Download Seating Arrangement CSV"
 @admin.register(Details)
 class DetailsAdmin(admin.ModelAdmin):
     change_list_template = 'admin/change_list_csv_upload.html'
@@ -93,8 +46,6 @@ class DetailsAdmin(admin.ModelAdmin):
             details = Details(status=status, RegNo=reg_no)
             details.save()
 
-    list_display = ('status', 'RegNo')
-    actions = [generate_seating_arrangement]
 
 @admin.register(RoomDetails)
 class RoomDetailsAdmin(admin.ModelAdmin):
@@ -137,4 +88,5 @@ class RoomDetailsAdmin(admin.ModelAdmin):
 
             room_details = RoomDetails(roomno=roomno, rows=rows, columns=columns, noofbenches=noofbenches, benchstrength=benchstrength)
             room_details.save()
-        list_display = ('roomno', 'rows', 'columns', 'noofbenches', 'benchstrength')
+
+

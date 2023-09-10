@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seating Plan</title>
+</head>
+<body>
+    <h1>Seating Plan for the room {{roomno}}</h1>
+    <pre>
+    {% for row in seating_plan %}
+        {% for col in row %}
+            {{ col }}{% if not forloop.last %} | {% endif %}
+        {% endfor %}
+        {% if not forloop.last %}{% endif %}
+    {% endfor %}
+    </pre>
+</body>
+</html>
+

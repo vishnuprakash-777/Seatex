@@ -1,10 +1,14 @@
 {% extends "admin/base.html" %}
 
 {% block content %}
-  <h1>{{ title }}</h1>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Upload</button>
-  </form>
+  <div style="max-width: 500px; margin: 0 auto; padding: 20px; background-color: #f7f7f7; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <h1 style="color: #007bff;">{{ title }}</h1>
+    <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" style="background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">
+        Upload
+      </button>
+    </form>
+  </div>
 {% endblock %}
