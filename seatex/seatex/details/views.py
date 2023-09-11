@@ -106,7 +106,9 @@ def generate_seating_plan(request):
 
 
 
-'''
+
+
+
 def generate_seating_plan2(request):
     if request.method == 'POST':
         roomno = request.POST.get('roomno')
@@ -118,10 +120,13 @@ def generate_seating_plan2(request):
 
         # Fetch student register numbers from the database
         register_data = Details.objects.values_list('RegNo', flat=True).distinct()
-        if(len(register_data) > number_of_col_in_room*number_of_row_in_room):
-            return 
+        max_students = number_of_row_in_room * number_of_col_in_room
+        if len(register_data) > max_students:
+            # Students strength exceeds room size, return a custom response
+            return render(request, 'students_strength_exceeds.html')
         # Create a dictionary to group students by prefix
-        students_by_prefix = {}
+        else:
+            students_by_prefix = {}
         for student in register_data:
             prefix = student[:8]
             if prefix not in students_by_prefix:
@@ -153,5 +158,8 @@ def generate_seating_plan2(request):
 
         return render(request, 'seating_plan.html', {'roomno': roomno, 'seating_plan': arr})
     else:
-        return render(request, 'room_selection.html')
-'''
+        return render(request, 'room_selection2.html')
+
+
+def home_page(request):
+    return render(request, 'home.html')
