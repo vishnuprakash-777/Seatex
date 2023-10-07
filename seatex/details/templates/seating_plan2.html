@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seating Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 20px;
+        }
+        h1 {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .room-container {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        pre table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        pre th, pre td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        pre th {
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Seating Arrangement</h1>
+    <div class="container">
+        {% for roomno, seating_plan in seating_arrangements.items %}
+        <div class="room-container">
+            <h2>Seating Plan for Room {{ roomno }}</h2>
+            <pre>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Row</th>
+                            <th>Student</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in seating_plan %}
+                            {% for col in row %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ col }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </pre>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

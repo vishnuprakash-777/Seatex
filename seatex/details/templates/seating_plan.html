@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seating Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        pre {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 20px;
+        }
+        pre table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        pre th, pre td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        pre th {
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Seating Plan for Room {{ roomno }}</h1>
+    <pre>
+        <table>
+            <thead>
+                <tr>
+                    <th>Row</th>
+                    <th>Student</th> <!-- Removed the "Column" column -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in seating_plan %}
+                    {% for col in row %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ col }}</td> <!-- Adjusted to display the student only -->
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </pre>
+</body>
+</html>
