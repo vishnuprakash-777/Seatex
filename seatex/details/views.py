@@ -165,10 +165,16 @@ def home_page(request):
     return render(request, 'home.html')
 
 
+
+
+
 def generate_seating_plan3(request):
     if request.method == 'POST':
         selected_rooms = request.POST.getlist('selected_rooms')
         seating_arrangements = {}  # Dictionary to store seating arrangements for each room
+
+        total_students = list(Details.objects.values_list('RegNo', flat=True).distinct())
+       
 
         for roomno in selected_rooms:
             room = RoomDetails.objects.get(roomno=roomno)
@@ -176,37 +182,32 @@ def generate_seating_plan3(request):
             number_of_col_in_room = room.columns
             max_students = number_of_row_in_room * number_of_col_in_room
 
-            # Fetch student register numbers from the database
-            register_data = Details.objects.values_list('RegNo', flat=True).distinct()
-
-            students = list(register_data)
-
             # Distribute students to rooms
+            current_room_students = total_students[:max_students]
+            total_students = total_students[max_students:]
+
+
             seatingPlan = []
 
-            while len(students) > 0:
-                current_room_students = students[:max_students]
-                students = students[max_students:]
+            students_by_prefix = {}
+            for student in current_room_students:
+                prefix = student[:8]
+                if prefix not in students_by_prefix:
+                    students_by_prefix[prefix] = []
+                students_by_prefix[prefix].append(student)
 
-                students_by_prefix = {}
-                for student in current_room_students:
-                    prefix = student[:8]
-                    if prefix not in students_by_prefix:
-                        students_by_prefix[prefix] = []
-                    students_by_prefix[prefix].append(student)
+            sequential_order = []
+            for prefix, students in students_by_prefix.items():
+                sequential_order.extend([f'{prefix}{i:02}' for i in range(1, len(students) + 1)])
 
-                sequential_order = []
-                for prefix, students in students_by_prefix.items():
-                    sequential_order.extend([f'{prefix}{i:02}' for i in range(1, len(students) + 1)])
+            while any(students_by_prefix.values()):
+                for prefix in students_by_prefix.keys():
+                    if students_by_prefix[prefix]:
+                        student = students_by_prefix[prefix].pop(0)
+                        seatingPlan.append(student)
 
-                while any(students_by_prefix.values()):
-                    for prefix in students_by_prefix.keys():
-                        if students_by_prefix[prefix]:
-                            student = students_by_prefix[prefix].pop(0)
-                            seatingPlan.append(student)
-
-                # Fill any remaining seats with '0'
-                seatingPlan += ['XX' for _ in range(max_students - len(seatingPlan))]
+            # Fill any remaining seats with 'XX'
+            seatingPlan += ['XX' for _ in range(max_students - len(seatingPlan))]
 
             x, y, z = 1, number_of_row_in_room, number_of_col_in_room
             arr = np.array(seatingPlan, dtype=str).reshape((x, y, z))
@@ -217,4 +218,3 @@ def generate_seating_plan3(request):
     else:
         room_list = RoomDetails.objects.all()
         return render(request, 'room_selection3.html', {'room_list': room_list})
-

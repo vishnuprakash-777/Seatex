@@ -10,4 +10,5 @@ urlpatterns = [
     path('generate-seating-plan2/', views.generate_seating_plan2, name='generate-seating-plan2'),
     path('generate-seating-plan3/', views.generate_seating_plan3, name='generate-seating-plan3'),
     path('', views.home_page, name='home'),
+
 ]

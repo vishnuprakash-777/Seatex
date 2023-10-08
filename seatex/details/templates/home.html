@@ -35,6 +35,11 @@
         main ul {
             text-align: left;
             margin-left: 30px;
+            list-style-type: none; /* Remove bullet points from the list */
+        }
+        main h2 {
+            font-size: 24px; /* Increase the heading size */
+            color: #000000; /* Change the heading color */
         }
         main li {
             font-size: 16px;
@@ -46,7 +51,22 @@
             transition: color 0.3s;
         }
         main a:hover {
+            text-decoration: underline; /* Underline on hover */
             color: #0056b3;
+        }
+        .admin-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .admin-button:hover {
+            background-color: #0056b3;
         }
         footer {
             background-color: #333;
@@ -68,6 +88,9 @@
             <h2>Multiple Rooms</h2>
             <li><a href="http://127.0.0.1:8000/details/generate-seating-plan3/">Seating Arrangement-Simple Display</a></li>
         </ul>
+        
+        <!-- Add the button to access the admin page -->
+        <a href="http://127.0.0.1:8000/admin/" class="admin-button">Admin Panel</a>
     </main>
     <footer>
         <p>&copy; 2023 Your Website</p>
