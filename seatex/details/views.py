@@ -218,3 +218,74 @@ def generate_seating_plan3(request):
     else:
         room_list = RoomDetails.objects.all()
         return render(request, 'room_selection3.html', {'room_list': room_list})
+
+from django.http import HttpResponse
+from django.shortcuts import render
+from openpyxl import Workbook
+import numpy as np
+from .models import RoomDetails, Details
+
+def generate_seating_plan4(request):
+    if request.method == 'POST':
+        selected_rooms = request.POST.getlist('selected_rooms')
+        seating_arrangements = {}  # Dictionary to store seating arrangements for each room
+
+        total_students = list(Details.objects.values_list('RegNo', flat=True).distinct())
+
+        for roomno in selected_rooms:
+            room = RoomDetails.objects.get(roomno=roomno)
+            number_of_row_in_room = room.rows
+            number_of_col_in_room = room.columns
+            max_students = number_of_row_in_room * number_of_col_in_room
+
+            # Distribute students to rooms
+            current_room_students = total_students[:max_students]
+            total_students = total_students[max_students:]
+
+            seatingPlan = []
+
+            students_by_prefix = {}
+            for student in current_room_students:
+                prefix = student[:8]
+                if prefix not in students_by_prefix:
+                    students_by_prefix[prefix] = []
+                students_by_prefix[prefix].append(student)
+
+            sequential_order = []
+            for prefix, students in students_by_prefix.items():
+                sequential_order.extend([f'{prefix}{i:02}' for i in range(1, len(students) + 1)])
+
+            while any(students_by_prefix.values()):
+                for prefix in students_by_prefix.keys():
+                    if students_by_prefix[prefix]:
+                        student = students_by_prefix[prefix].pop(0)
+                        seatingPlan.append(student)
+
+            # Fill any remaining seats with 'XX'
+            seatingPlan += ['XX' for _ in range(max_students - len(seatingPlan))]
+
+            x, y, z = 1, number_of_row_in_room, number_of_col_in_room
+            arr = np.array(seatingPlan, dtype=str).reshape((x, y, z))
+
+            # Convert the NumPy array to a list
+            seating_plan_list = arr.tolist()
+
+            seating_arrangements[roomno] = seating_plan_list
+
+        # Create an Excel file and write data
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="seating_plan.xlsx"'
+
+        wb = Workbook()
+        for roomno, seating_plan in seating_arrangements.items():
+            ws = wb.create_sheet(title=f'Room {roomno}')
+            for i in range(len(seating_plan)):
+                for j in range(len(seating_plan[i])):
+                    ws.append(seating_plan[i][j])
+
+        wb.save(response)
+
+        return response
+    else:
+        room_list = RoomDetails.objects.all()
+        return render(request, 'room_selection4.html', {'room_list': room_list})
