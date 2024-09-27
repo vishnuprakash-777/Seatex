@@ -32,8 +32,8 @@ This project automates the seating arrangement process in examination halls. It 
 ### Setup
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/automated-seating.git
-    cd automated-seating
+    git clone https://github.com/vishnuprakash-777/seatex.git
+    cd seatex
     ```
 
 2. Create a virtual environment:
@@ -42,22 +42,17 @@ This project automates the seating arrangement process in examination halls. It 
     source venv/bin/activate  # On Windows use: venv\Scripts\activate
     ```
 
-3. Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4. Run database migrations:
+3. Run database migrations:
     ```bash
     python manage.py migrate
     ```
 
-5. Start the Django development server:
+4. Start the Django development server:
     ```bash
     python manage.py runserver
     ```
 
-6. Open the application in your browser at `http://127.0.0.1:8000/`.
+5. Open the application in your browser at `http://127.0.0.1:8000/`.
 
 ## Usage
 
